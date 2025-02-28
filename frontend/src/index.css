@@ -1,7 +1,37 @@
-/* frontend/src/index.css */
+/* src/index.css */
+
+/* Tailwind Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional: Global Styles */
+
+/* Body styling */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }  
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9; /* Light gray background */
+  margin: 0;
+  padding: 0;
+}
+
+/* Global typography settings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #333; /* Dark text for headings */
+}
+
+/* Links styling */
+a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Adding smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}

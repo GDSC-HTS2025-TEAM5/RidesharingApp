@@ -1,11 +1,17 @@
 import React from "react";
-import login_signup from "./components/login_signup/login_signup";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 
 function App() {
   return (
-    <div>
-        <login_signup />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<Login />} /> {/* Default Route */}
+      </Routes>
+    </Router>
   );
 }
 

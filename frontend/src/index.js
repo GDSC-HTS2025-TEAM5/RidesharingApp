@@ -1,6 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";  // Ensure the correct import for React 18+
 import App from "./App";
-import "./index.css"; // Optional for styling
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+const root = ReactDOM.createRoot(document.getElementById("root"));  // Create root
+root.render(<App />);
