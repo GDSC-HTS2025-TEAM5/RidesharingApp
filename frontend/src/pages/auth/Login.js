@@ -13,7 +13,14 @@ function Login() {
       return;
     }
     console.log("Logging in with:", email, password);
+    
     // TODO: Connect to backend authentication
+    if (email === "user@example.com" && password === "password") {
+      alert("Login successful!");
+      navigate("/RideDashBoard"); // Redirect to RideDashBoard
+    } else {
+      alert("Invalid credentials, please try again.");
+    }
   };
 
   return (
