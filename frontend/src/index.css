@@ -5,8 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Optional: Global Styles */
-
 /* Body styling */
 body {
   font-family: 'Arial', sans-serif;
@@ -15,41 +13,53 @@ body {
   padding: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Align to the top */
   height: 100vh;
   color: #333;
 }
 
-/* Container for forms */
+/* Container for the main dashboard */
 .container {
   background-color: #fff;
-  padding: 40px;
+  padding: 30px 40px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
-  text-align: center;
+  max-width: 400px; /* Adjust the width */
+  text-align: left; /* Align text to left */
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
-/* Form Inputs */
-input {
+/* Input & Select Boxes */
+input,
+select {
   width: 100%;
   padding: 12px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   border: 2px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.3s;
 }
 
-input:focus {
-  border-color: #4CAF50;
+input:focus,
+select:focus {
+  border-color: #4CAF50; /* Focus color */
   outline: none;
 }
 
-/* Buttons */
-/*button {
-  width: 100%;
+/* Card component style */
+.card {
+  background-color: #f4f4f9;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Button styling */
+button {
   padding: 12px;
   background-color: #4CAF50;
   color: white;
@@ -59,24 +69,12 @@ input:focus {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-*/
+
 button:hover {
   background-color: #45a049;
 }
 
-.container button{
-  width: 100%;
-  padding: 12px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-/* Link styling */
+/* Link styling for buttons */
 p {
   font-size: 14px;
   margin-top: 20px;
@@ -94,14 +92,57 @@ p button:hover {
   text-decoration: underline;
 }
 
-/* Responsive Design */
+/* Fixed Bottom Navigation */
+.fixed-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 20px 0; /* Increased padding */
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-bottom-nav button {
+  width: 60px; /* Increased button width */
+  height: 60px; /* Increased button height */
+  font-size: 20px; /* Increased font size */
+  border-radius: 50%;
+  padding: 0;
+}
+
+/* Mobile Adjustments */
 @media (max-width: 640px) {
+  /* Adjust container padding for smaller screens */
   .container {
-    padding: 20px;
+    padding: 15px;
     max-width: 100%;
   }
 
-  input, button {
-    font-size: 14px;
+  input, select, button {
+    font-size: 14px; /* Slightly smaller font for mobile */
+  }
+
+  /* Ensure the text inside the container isn't too large */
+  h2, p {
+    font-size: 16px; /* Adjust font size for readability */
+  }
+
+  .fixed-bottom-nav {
+    padding: 10px 0;
+  }
+
+  .fixed-bottom-nav button {
+    width: 50px; /* Smaller buttons for mobile */
+    height: 50px;
+  }
+}
+
+@media (max-width: 320px) {
+  /* For very small screens */
+  .container {
+    padding: 10px;
   }
 }

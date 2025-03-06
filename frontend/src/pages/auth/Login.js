@@ -12,12 +12,12 @@ function Login() {
       alert("Please enter both email and password.");
       return;
     }
-    console.log("Logging in with:", email, password);
     
     // TODO: Connect to backend authentication
     if (email === "user@example.com" && password === "password") {
-      alert("Login successful!");
-      navigate("/RideDashBoard"); // Redirect to RideDashBoard
+      // alert("Login successful!");
+      console.log("Logging in with:", email, password);
+      navigate("/dash/RiderDashboard"); // Redirect to RideDashBoard
     } else {
       alert("Invalid credentials, please try again.");
     }
