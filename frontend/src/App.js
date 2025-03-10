@@ -15,8 +15,8 @@ function App() {
         <Route path="/auth/Signup" element={<Signup />} />
         <Route path="/dash/*" element={<Layout />}>
                     <Route index element={<Home />} />
-                    <Route path="RiderDashboard" element={<RiderDashboard />} />  {/* Fixed */}
-                    <Route path="DriverDashboard" element={<DriverDashboard />} />  {/* Fixed */}
+                    <Route path="RiderDashboard" element={<RiderDashboard />} /> 
+                    <Route path="DriverDashboard" element={<DriverDashboard />} /> 
                 </Route>
         <Route path="/" element={<Login />} /> {/* Default Route */}
       </Routes>

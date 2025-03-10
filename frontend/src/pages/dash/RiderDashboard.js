@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaSearch, FaClock, FaHome, FaSchool } from "react-icons/fa";
 import { Button, Input, Select, Card, CardContent } from "../../components/ui";
 
 const RiderDashboard = () => {
   const [destination, setDestination] = useState("");
-  const navigate = useNavigate();
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
@@ -69,8 +67,6 @@ const RiderDashboard = () => {
           </CardContent>
         </Card>
       </div>
-
-
     </div>
   );
 };

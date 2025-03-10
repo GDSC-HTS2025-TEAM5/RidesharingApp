@@ -1,32 +1,245 @@
-import React, { useState } from 'react';
-import { RouteSelection, RequestList } from '../../components/ui';
+import React, { useState } from "react";
+import { FaCar, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const DriverDashboard = () => {
-  const [selectedRoute, setSelectedRoute] = useState(null);
+  // Hardcoded Data
+  const [liveRequests, setLiveRequests] = useState([
+    { id: 1, name: "John Doe", pickup: "Home", dropoff: "SFU" },
+    { id: 2, name: "Jane Smith", pickup: "Home", dropoff: "SFU" },
+  ]);
+
+  const [upcomingRides, setUpcomingRides] = useState([
+    { id: 1, time: "2:00 PM", pickup: "BF's Home", dropoff: "SFU" },
+    { id: 2, time: "3:30 PM", pickup: "Home", dropoff: "SFU" },
+  ]);
+
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [route, setRoute] = useState("Home to SFU");
+  const [selectedRoute, setSelectedRoute] = useState("");
+  const [routes, setRoutes] = useState(["Home to SFU", "BF's Home to SFU"]);
+  const [rideTime, setRideTime] = useState("");
+  const [rideFrequency, setRideFrequency] = useState("Once");
+  const [isRiding, setIsRiding] = useState(false);
+
+  const acceptRequest = (id) => {
+    // Find the accepted ride request
+    const acceptedRide = liveRequests.find((request) => request.id === id);
+  
+    // Add the accepted ride to the upcoming rides
+    if (acceptedRide) {
+      setUpcomingRides([...upcomingRides, { ...acceptedRide, time: "1:00 PM" }]); // Add a placeholder for time
+    }
+  
+    // Remove the ride from live requests
+    setLiveRequests(liveRequests.filter((request) => request.id !== id));
+  
+    alert("Ride request accepted!");
+  };
+  
+
+  const rejectRequest = (id) => {
+    setLiveRequests(liveRequests.filter((request) => request.id !== id));
+    alert("Ride request rejected!");
+  };
+
+  const toggleAvailability = () => {
+    setIsAvailable(!isAvailable);
+  };
+
+  const updateRoute = (newRoute) => {
+    setRoute(newRoute);
+  };
+
+  const handleRouteChange = (e) => {
+    setSelectedRoute(e.target.value);
+  };
+
+  const handleTimeChange = (e) => {
+    setRideTime(e.target.value);
+  };
+
+  const handleFrequencyChange = (e) => {
+    setRideFrequency(e.target.value);
+  };
+
+  const startEndRide = () => {
+    if (isRiding) {
+      setIsRiding(false);
+      alert("Ride has ended!");
+    } else {
+      setIsRiding(true);
+      alert("Ride has started!");
+    }
+  };
 
   return (
-    <div className="bg-gray-50 min-h-screen p-8">
-      <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6 space-y-8">
-        <h1 className="text-3xl font-bold text-center text-indigo-600">John Doe's Dashboard</h1>
+    <div className="bg-gray-100 p-6">
+      <div className="container">
+        {/* Driver Dashboard Header */}
+        <h1 className="text-3xl font-semibold text-center mb-8">Driver Dashboard</h1>
 
-        {/* Current Routes Section */}
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-gray-800">Current Routes</h2>
-          <div className="bg-indigo-100 p-4 rounded-lg shadow-sm">
-            <RouteSelection 
-              selectedRoute={selectedRoute}
-              setSelectedRoute={setSelectedRoute}
+        {/* Route Management */}
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Route & Availability</h2>
+          <p className="mb-4">Current Route: <span className="font-bold">{route}</span></p>
+
+          {/* Route List */}
+          <div className="overflow-y-auto max-h-48 mb-4">
+            {routes.map((r, index) => (
+              <div
+                key={index}
+                onClick={() => updateRoute(r)}
+                className={`p-2 cursor-pointer mb-2 rounded-md ${
+                  route === r ? "bg-blue-500 text-white" : "bg-gray-200"
+                }`}
+              >
+                {r}
+              </div>
+            ))}
+          </div>
+
+          {/* Add New Route */}
+          <div className="flex flex-col mb-4">
+            <p className="mb-2 font-semibold">Add New Route:</p>
+            <input
+              type="text"
+              placeholder="Enter new start location"
+              className="p-2 border border-gray-300 rounded-md mb-4"
+              onChange={(e) => setSelectedRoute(e.target.value)}
+              value={selectedRoute}
+            />
+            <button
+              className="bg-blue-500 text-white p-2 rounded-md"
+              onClick={() => {
+                if (selectedRoute) {
+                  setRoutes([...routes, selectedRoute]);
+                  updateRoute(selectedRoute);
+                }
+              }}
+            >
+              Add Route
+            </button>
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              className={`p-2 rounded-md flex items-center ${
+                isAvailable ? "bg-green-500" : "bg-red-500"
+              } text-white`}
+              onClick={toggleAvailability}
+            >
+              <FaCar className="mr-2" /> {isAvailable ? "Go Offline" : "Go Online"}
+            </button>
+          </div>
+        </div>
+
+        {/* Currently Riding Section */}
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Currently Riding?</h2>
+          <div className="flex justify-center">
+            <button
+              className={`p-4 rounded-full ${isRiding ? "bg-red-500" : "bg-green-500"} text-white font-bold`}
+              onClick={startEndRide}
+            >
+              {isRiding ? "End Ride" : "Start Ride"}
+            </button>
+          </div>
+        </div>
+
+        {/* New Ride Section */}
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-semibold mb-4">New Ride</h2>
+          <div className="mb-4">
+            <p className="mb-2 font-semibold">Choose a Route:</p>
+            <select
+              className="p-2 border border-gray-300 rounded-md mb-4"
+              value={selectedRoute}
+              onChange={handleRouteChange}
+            >
+              {routes.map((r, index) => (
+                <option key={index} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col mb-4">
+            <label className="mb-2 font-semibold">Select Time:</label>
+            <input
+              type="time"
+              className="p-2 border border-gray-300 rounded-md"
+              value={rideTime}
+              onChange={handleTimeChange}
             />
           </div>
-        </section>
 
-        {/* Requests Section */}
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-gray-800">Requests Received</h2>
-          <div className="bg-indigo-100 p-4 rounded-lg shadow-sm">
-            <RequestList />
+          <div className="flex flex-col mb-4">
+            <label className="mb-2 font-semibold">Select Frequency:</label>
+            <select
+              className="p-2 border border-gray-300 rounded-md"
+              value={rideFrequency}
+              onChange={handleFrequencyChange}
+            >
+              <option value="Once">Once</option>
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+            </select>
           </div>
-        </section>
+
+          {/* Add Ride Button */}
+          <div className="flex justify-center mb-6">
+            <button
+              className="bg-blue-500 text-white p-4 rounded-md font-bold"
+              onClick={() => alert("Ride Added!")}
+            >
+              Add Ride
+            </button>
+          </div>
+        </div>
+
+        {/* Upcoming Rides */}
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Upcoming Rides</h2>
+          {upcomingRides.map((ride) => (
+            <div key={ride.id} className="mb-4">
+              <p>
+                <strong>{ride.time}</strong> - {ride.pickup} to {ride.dropoff}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Live Ride Requests */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">Live Ride Requests</h2>
+          {liveRequests.length > 0 ? (
+            liveRequests.map((request) => (
+              <div key={request.id} className="flex justify-between items-center mb-4">
+                <div>
+                  <p className="font-semibold">{request.name}</p>
+                  <p>{request.pickup} to {request.dropoff}</p>
+                </div>
+                <div className="flex items-center">
+                  <button
+                    className="bg-green-500 text-white p-2 rounded-md flex items-center mr-2"
+                    onClick={() => acceptRequest(request.id)}
+                  >
+                    <FaCheckCircle className="mr-2" /> Accept
+                  </button>
+                  <button
+                    className="bg-red-500 text-white p-2 rounded-md flex items-center"
+                    onClick={() => rejectRequest(request.id)}
+                  >
+                    <FaTimesCircle className="mr-2" /> Reject
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No live requests at the moment.</p>
+          )}
+        </div>
       </div>
     </div>
   );
