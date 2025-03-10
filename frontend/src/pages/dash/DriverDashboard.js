@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import { RouteSelection, RequestList } from '../../components/ui';
 
 const DriverDashboard = () => {
