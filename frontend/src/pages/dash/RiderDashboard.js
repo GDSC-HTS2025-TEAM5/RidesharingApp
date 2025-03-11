@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch, FaClock, FaHome, FaSchool } from "react-icons/fa";
 import { Button, Input, Select, Card, CardContent } from "../../components/ui";
-import SearchBar from "../../components/SearchBar";
+import SearchBar from "../../components/ui/SearchBar";
 
 const generateTimeOptions = () => {
   const times = [];
