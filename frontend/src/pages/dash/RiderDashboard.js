@@ -75,20 +75,6 @@ const RiderDashboard = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Bottom Navigation */}
-      <div className="fixed-bottom-nav flex justify-between p-4 bg-white shadow-md">
-        <Button className="!w-20 !h-20 !bg-blue-400 !text-white">Home</Button>
-        <Button className="!w-20 !h-20 !bg-yellow-400 !text-black">Activity</Button>
-        <Button className="!w-20 !h-20 !bg-blue-400 !text-white">Chat</Button>
-        <Button
-          className="!w-20 !h-20 !bg-blue-400 !text-white"
-          onClick={() => navigate("/dash/DriverDashboard")}
-        >
-          Driver
-        </Button>
-        <Button className="!w-20 !h-20 !bg-orange-400 !text-black">Account</Button>
-      </div>
     </div>
   );
 };
