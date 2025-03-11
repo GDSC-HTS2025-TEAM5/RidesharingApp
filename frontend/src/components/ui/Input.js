@@ -1,8 +1,9 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-const Input = ({ type = "text", placeholder, value, onChange, className }) => {
+const Input = forwardRef(({ type = "text", placeholder, value, onChange, className }, ref) => {
   return (
     <input
+      ref={ref} 
       type={type}
       placeholder={placeholder}
       value={value}
@@ -10,6 +11,6 @@ const Input = ({ type = "text", placeholder, value, onChange, className }) => {
       className={`border border-gray-300 rounded p-2 w-full text-right placeholder:text-right ${className}`}
     />
   );
-};
+});
 
 export default Input;
