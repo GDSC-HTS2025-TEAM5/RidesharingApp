@@ -17,7 +17,17 @@ function Signup() {
       alert("Passwords do not match.");
       return;
     }
+
+    // TODO: Connect to backend authentication
+    if (email === "user@example.com" && password === "password") {
+      // alert("Signup successful!");
+      console.log("Signing up with:", email, password);
+      navigate("/auth/TermsConditions"); // Redirect to RideDashBoard
+    } else {
+      alert("Invalid credentials, please try again.");
+    }
     console.log("Signing up with:", email, password);
+    
     // TODO: Connect to backend registration
   };
 
