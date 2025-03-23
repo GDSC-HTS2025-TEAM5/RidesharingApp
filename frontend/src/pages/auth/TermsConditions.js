@@ -8,7 +8,7 @@ function TermsAndConditions() {
   function handleAccept() {
     // You can store agreement status in localStorage, context, or backend
     localStorage.setItem('acceptedTerms', 'true');
-    navigate('/dash/RiderDashboard.js'); // Continue to RiderDashboard
+    navigate('/dash/Home.js'); // Continue to RiderDashboard
   }
 
   return (

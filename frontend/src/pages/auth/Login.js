@@ -47,7 +47,6 @@ function Login() {
           <button type="submit">Login</button>
         </form>
         <p>Don't have an account? <button onClick={() => navigate("/auth/Signup")}>Sign up here</button></p>
-        <p>Don't have an account? <button onClick={() => navigate("/auth/signup")}>Sign up here</button></p>
       </div>
     </div>
   );
