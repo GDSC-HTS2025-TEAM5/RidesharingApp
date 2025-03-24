@@ -26,7 +26,6 @@ function Signup() {
     } else {
       alert("Invalid credentials, please try again.");
     }
-    console.log("Signing up with:", email, password);
     
     // TODO: Connect to backend registration
   };

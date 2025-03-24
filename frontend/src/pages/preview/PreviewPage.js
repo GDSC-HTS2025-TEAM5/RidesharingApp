@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function PreviewPage1({ onNext }) {
+function PreviewPage({ onNext }) {
   const navigate = useNavigate();
 
   const handleNext = () => {
     onNext();  // Proceed to the next page or mark as completed
-    navigate('/preview2'); // Redirect to the next preview page
+    navigate('/auth/Signup'); // Redirect to the next preview page
   };
 
   return (
@@ -18,4 +18,4 @@ function PreviewPage1({ onNext }) {
   );
 }
 
-export default PreviewPage1;
+export default PreviewPage;

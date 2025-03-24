@@ -1,9 +1,8 @@
-import React, { use } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Preview Pages
-import PreviewPage1 from "./pages/preview/PreviewPage1";
-import PreviewPage2 from "./pages/preview/PreviewPage2";
+import PreviewPage from "./pages/preview/PreviewPage";
 
 // Authentication Pages
 import Login from "./pages/auth/Login";
@@ -17,51 +16,53 @@ import Layout from "./pages/dash/Layout";
 import RiderDashboard from "./pages/dash/RiderDashboard";
 
 function App() {
-  const [isFirstOpen, setIsFirstOpen] = React.useState(true);
-  const navigate = useNavigate();
+  const [isFirstOpen, setIsFirstOpen] = useState(true);
+  const [isTestMode] = useState(true);
+  console.log("App components loaded");
 
   useEffect(() => {
-    // Handling for the user's first visit for the app
-    const firstOpen = localStorage.getItem("isFirstOpen");
+    // Check if first-time user based on flag in localStorage
+    const firstOpen = !localStorage.getItem("isFirstOpen");
+    setIsFirstOpen(firstOpen);
+
+    console.log("First Open:", firstOpen);
+    console.log("Test Mode:", isTestMode);
 
     if (firstOpen) {
-      setIsFirstOpen(false);
-      navigate("/auth/Login");
+      localStorage.setItem("isFirstOpen", "true");
     }
-  }, [navigate]);
-
-  const handleFinishPreview = () => {
-    localStorage.setItem("isFirstOpen", "false");
-    setIsFirstOpen(false);
-    navigate("/auth/Login");
-  };
+  }, [isTestMode]);
 
   return (
-    <Router>
+    <Router> {/* Router should wrap the entire app */}
       <Routes>
-        {isFirstOpen ? (
-          // Show preview pages on first open
-          <>
-            <Route path="/preview1" element={<PreviewPage1 onNext={handleFinishPreview}/>} />
-            <Route path="/preview2" element={<PreviewPage2 onNext={handleFinishPreview} />} />
-          </>
-          ) : (
-            // Other pages after the first visit
-            <>
-            <Route path="/auth/Login" element={<Login />} />
-            <Route path="/auth/Signup" element={<Signup />} />
-            <Route path="/auth/TermsConditions" element={<TermsConditions />} />
-            <Route path="/dash/RiderDashboard" element={<RiderDashboard />} />
-            <Route path="/dash/DriverDashboard" element={<DriverDashboard/>}/>
-            <Route path="/dash/*" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="RiderDashboard" element={<RiderDashboard />} /> 
-                <Route path="DriverDashboard" element={<DriverDashboard />} /> 
-            </Route>
-            </>
-          )}
-          // Default page
-          <Route path="/" element={<Login />} />
+        {/* Conditional page open based on first-open */}
+        <Route 
+          path="/preview/PreviewPage" 
+          element={isTestMode || isFirstOpen ? <Login /> : <Navigate to="/auth/PreviewPage" />} 
+        />
+        <Route path="/preview/*" element={<PreviewPage onNext={() => setIsFirstOpen(false)} />} />
+
+        {/* Default route */}
+        <Route path="/" element={<Navigate to={isFirstOpen ? "/preview/PreviewPage" : "/auth/Login"} />} />
+
+        {/* Authentication routes */}
+        <Route path="/auth/Login" element={<Login />} />
+        <Route path="/auth/Signup" element={<Signup />} />
+        <Route path="/auth/TermsConditions" element={<TermsConditions />} />
+
+        {/* Dashboard routes */}
+        <Route path="/dash/Home" element={<Home />} />
+        <Route path="/dash/Layout" element={<Layout />} />
+        <Route path="/dash/RiderDashboard" element={<RiderDashboard />} />
+        <Route path="/dash/DriverDashboard" element={<DriverDashboard />} />
+
+        <Route path="/dash/*" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="RiderDashboard" element={<RiderDashboard />} />
+          <Route path="DriverDashboard" element={<DriverDashboard />} />
+        </Route>
+
       </Routes>
     </Router>
   );
