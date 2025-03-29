@@ -1,23 +1,25 @@
 import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function PreviewPage() {
+function PreviewPage([onNext]) {
   const navigate = useNavigate();
   const [isFirstVisit, setIsFirstVisit] = useState(true);
 
+  console.log("Preview Page");
+
   useEffect( () => {
     const storedValue = localStorage.getItem('firstVisit');
-    if (storedValue == 'false') {
+    if (storedValue === 'false') {
       setIsFirstVisit(false);
       navigate('/login');
     } else {
       localStorage.setItem('firstVisit', 'false');
     }
-  }, []);
+  }, [isFirstVisit]);
 
   const handleNext = () => {
     onNext();  // Proceed to the next page or mark as completed
-    navigate('/auth/Signup'); // Redirect to the next preview page
+    navigate('/auth/Signup');
   };
 
   return (

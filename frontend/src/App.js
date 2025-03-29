@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Preview Pages
 import PreviewPage from "./pages/auth/PreviewPage";
@@ -20,7 +20,7 @@ function App() {
     <Router> {/* Router should wrap the entire app */}
       <Routes>
         {/* Default route */}
-        <Route path="/" element={<Navigate to={isFirstOpen ? "/preview/PreviewPage" : "/auth/Login"} />} />
+        <Route path="/" element={<Login />}/>
 
         {/* Authentication routes */}
         <Route path="/auth/Login" element={<Login />} />
@@ -40,6 +40,7 @@ function App() {
                     <Route path="DriverDashboard" element={<DriverDashboard />} /> 
                 </Route>
 
+        <Route path = "*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
