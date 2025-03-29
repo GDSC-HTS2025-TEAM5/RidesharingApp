@@ -58,10 +58,10 @@ function App() {
         <Route path="/dash/DriverDashboard" element={<DriverDashboard />} />
 
         <Route path="/dash/*" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="RiderDashboard" element={<RiderDashboard />} />
-          <Route path="DriverDashboard" element={<DriverDashboard />} />
-        </Route>
+                    <Route index element={<Home />} />
+                    <Route path="RiderDashboard" element={<RiderDashboard />} /> 
+                    <Route path="DriverDashboard" element={<DriverDashboard />} /> 
+                </Route>
 
       </Routes>
     </Router>
