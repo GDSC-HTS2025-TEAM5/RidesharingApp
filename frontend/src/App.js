@@ -29,10 +29,6 @@ function App() {
         <Route path="/auth/PreviewPage" element={<PreviewPage />} />
 
         {/* Dashboard routes */}
-        <Route path="/dash/Home" element={<Home />} />
-        <Route path="/dash/Layout" element={<Layout />} />
-        <Route path="/dash/RiderDashboard" element={<RiderDashboard />} />
-        <Route path="/dash/DriverDashboard" element={<DriverDashboard />} />
 
         <Route path="/dash/*" element={<Layout />}>
                     <Route index element={<Home />} />
