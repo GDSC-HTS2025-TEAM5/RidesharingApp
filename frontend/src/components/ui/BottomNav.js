@@ -11,19 +11,21 @@ function BottomNav({ tabSelection, setTabSelection }) {
     };
 
     return (
-        <div className="fixed bottom-4 left-1/2 translate-x-[-50%] bg-white-800 p-2 rounded-full flex justify-around items-center max-w-sm w-full sm:w-3/4 md:w-1/2">
+        <div 
+        style={{display: "flex", justifyContent: "space-between", minWidth:"100%", marginLeft: "10%"}}
+        className="!flex min-w-fit bg-blue-500">
             {bar_name.map((name, index) => (
-                <button
-                    key={index}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center text-center font-bold transition-all
-                    text-xs ${tabSelection === index ? "bg-yellow-400 text-black" : "bg-blue-400 text-white"}`}
-                    onClick={() => handleNavigation(index)}
-                >
-                    {name}
-                </button>
+            <button
+            key={index}
+            className={`custom-btn ${tabSelection === index ? "active" : "inactive"}`}
+            onClick={() => handleNavigation(index)}
+        >
+            {name}
+        </button>
+        
             ))}
         </div>
-    );
+    );    
 }
 
 export default BottomNav;

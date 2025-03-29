@@ -5,6 +5,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 /* Body styling */
 body {
   font-family: 'Arial', sans-serif;
@@ -61,13 +63,39 @@ select:focus {
 /* Button styling */
 button {
   padding: 12px;
-  background-color: #4CAF50;
+  background-color: green;
   color: white;
   font-size: 16px;
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+button.custom-btn {
+  all: unset !important;  /* Resets unwanted global styles */
+  width: 3rem !important; /* w-12 */
+  height: 3rem !important; /* h-12 */
+  border-radius : 9999px !important; /* rounded-full */
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  font-weight: bold !important; /* font-bold */
+  font-size: 0.75rem !important; /* text-xs */
+  transition: all 0.2s ease-in-out !important; /* transition-all */
+}
+
+/* Dynamic styles */
+button.custom-btn.active {
+  background-color: #facc15 !important; /* bg-yellow-400 */
+  color: black !important; /* text-black */
+}
+
+button.custom-btn.inactive {
+  background-color: #3b82f6 !important; /* bg-blue-400 */
+  color: white !important; /* text-white */
 }
 
 button:hover {
