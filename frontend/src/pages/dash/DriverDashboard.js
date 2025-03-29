@@ -1,18 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCar, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const DriverDashboard = () => {
-  // Hardcoded Data
-  const [liveRequests, setLiveRequests] = useState([
-    { id: 1, name: "John Doe", pickup: "Home", dropoff: "SFU" },
-    { id: 2, name: "Jane Smith", pickup: "Home", dropoff: "SFU" },
-  ]);
-
-  const [upcomingRides, setUpcomingRides] = useState([
-    { id: 1, time: "2:00 PM", pickup: "BF's Home", dropoff: "SFU" },
-    { id: 2, time: "3:30 PM", pickup: "Home", dropoff: "SFU" },
-  ]);
-
+  const [liveRequests, setLiveRequests] = useState([]);
+  const [upcomingRides, setUpcomingRides] = useState([]);
   const [isAvailable, setIsAvailable] = useState(true);
   const [route, setRoute] = useState("Home to SFU");
   const [selectedRoute, setSelectedRoute] = useState("");
@@ -21,69 +12,52 @@ const DriverDashboard = () => {
   const [rideFrequency, setRideFrequency] = useState("Once");
   const [isRiding, setIsRiding] = useState(false);
 
+  useEffect(() => {
+    const storedRequests = JSON.parse(localStorage.getItem("rideRequests")) || [];
+    setLiveRequests(storedRequests);
+  }, []);
+
+  const updateLocalStorage = (updatedRequests) => {
+    localStorage.setItem("rideRequests", JSON.stringify(updatedRequests));
+  };
+
   const acceptRequest = (id) => {
-    // Find the accepted ride request
-    const acceptedRide = liveRequests.find((request) => request.id === id);
-  
-    // Add the accepted ride to the upcoming rides
+    const acceptedRide = liveRequests.find((r) => r.id === id);
     if (acceptedRide) {
-      setUpcomingRides([...upcomingRides, { ...acceptedRide, time: "1:00 PM" }]); // Add a placeholder for time
+      setUpcomingRides([...upcomingRides, { ...acceptedRide, time: acceptedRide.time || "1:00 PM" }]);
     }
-  
-    // Remove the ride from live requests
-    setLiveRequests(liveRequests.filter((request) => request.id !== id));
-  
+    const updated = liveRequests.filter((r) => r.id !== id);
+    setLiveRequests(updated);
+    updateLocalStorage(updated);
     alert("Ride request accepted!");
   };
-  
 
   const rejectRequest = (id) => {
-    setLiveRequests(liveRequests.filter((request) => request.id !== id));
+    const updated = liveRequests.filter((r) => r.id !== id);
+    setLiveRequests(updated);
+    updateLocalStorage(updated);
     alert("Ride request rejected!");
   };
 
-  const toggleAvailability = () => {
-    setIsAvailable(!isAvailable);
-  };
-
-  const updateRoute = (newRoute) => {
-    setRoute(newRoute);
-  };
-
-  const handleRouteChange = (e) => {
-    setSelectedRoute(e.target.value);
-  };
-
-  const handleTimeChange = (e) => {
-    setRideTime(e.target.value);
-  };
-
-  const handleFrequencyChange = (e) => {
-    setRideFrequency(e.target.value);
-  };
-
+  const toggleAvailability = () => setIsAvailable(!isAvailable);
+  const updateRoute = (newRoute) => setRoute(newRoute);
+  const handleRouteChange = (e) => setSelectedRoute(e.target.value);
+  const handleTimeChange = (e) => setRideTime(e.target.value);
+  const handleFrequencyChange = (e) => setRideFrequency(e.target.value);
   const startEndRide = () => {
-    if (isRiding) {
-      setIsRiding(false);
-      alert("Ride has ended!");
-    } else {
-      setIsRiding(true);
-      alert("Ride has started!");
-    }
+    setIsRiding(!isRiding);
+    alert(isRiding ? "Ride has ended!" : "Ride has started!");
   };
 
   return (
-    <div className="bg-gray-100 p-6">
-      <div className="container">
-        {/* Driver Dashboard Header */}
+    <div className="bg-gray-100 p-6 min-h-screen">
+      <div className="container mx-auto max-w-3xl">
         <h1 className="text-3xl font-semibold text-center mb-8">Driver Dashboard</h1>
 
-        {/* Route Management */}
+        {/* Route and Availability */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
           <h2 className="text-2xl font-semibold mb-4">Route & Availability</h2>
           <p className="mb-4">Current Route: <span className="font-bold">{route}</span></p>
-
-          {/* Route List */}
           <div className="overflow-y-auto max-h-48 mb-4">
             {routes.map((r, index) => (
               <div
@@ -98,7 +72,7 @@ const DriverDashboard = () => {
             ))}
           </div>
 
-          {/* Add New Route */}
+          {/* Add Route */}
           <div className="flex flex-col mb-4">
             <p className="mb-2 font-semibold">Add New Route:</p>
             <input
@@ -133,7 +107,7 @@ const DriverDashboard = () => {
           </div>
         </div>
 
-        {/* Currently Riding Section */}
+        {/* Ride Control */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
           <h2 className="text-2xl font-semibold mb-4">Currently Riding?</h2>
           <div className="flex justify-center">
@@ -142,58 +116,6 @@ const DriverDashboard = () => {
               onClick={startEndRide}
             >
               {isRiding ? "End Ride" : "Start Ride"}
-            </button>
-          </div>
-        </div>
-
-        {/* New Ride Section */}
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-2xl font-semibold mb-4">New Ride</h2>
-          <div className="mb-4">
-            <p className="mb-2 font-semibold">Choose a Route:</p>
-            <select
-              className="p-2 border border-gray-300 rounded-md mb-4"
-              value={selectedRoute}
-              onChange={handleRouteChange}
-            >
-              {routes.map((r, index) => (
-                <option key={index} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label className="mb-2 font-semibold">Select Time:</label>
-            <input
-              type="time"
-              className="p-2 border border-gray-300 rounded-md"
-              value={rideTime}
-              onChange={handleTimeChange}
-            />
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label className="mb-2 font-semibold">Select Frequency:</label>
-            <select
-              className="p-2 border border-gray-300 rounded-md"
-              value={rideFrequency}
-              onChange={handleFrequencyChange}
-            >
-              <option value="Once">Once</option>
-              <option value="Daily">Daily</option>
-              <option value="Weekly">Weekly</option>
-            </select>
-          </div>
-
-          {/* Add Ride Button */}
-          <div className="flex justify-center mb-6">
-            <button
-              className="bg-blue-500 text-white p-4 rounded-md font-bold"
-              onClick={() => alert("Ride Added!")}
-            >
-              Add Ride
             </button>
           </div>
         </div>
@@ -210,7 +132,7 @@ const DriverDashboard = () => {
           ))}
         </div>
 
-        {/* Live Ride Requests */}
+        {/* Live Requests */}
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Live Ride Requests</h2>
           {liveRequests.length > 0 ? (
@@ -219,6 +141,12 @@ const DriverDashboard = () => {
                 <div>
                   <p className="font-semibold">{request.name}</p>
                   <p>{request.pickup} to {request.dropoff}</p>
+                  <p>{request.date}, {request.time}</p>
+                  {request.selectedRide && (
+                    <p className="text-sm text-gray-600">
+                      Assigned Driver: <strong>{request.selectedRide.driver}</strong> ({request.selectedRide.car}) - ETA {request.selectedRide.eta}
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-center">
                   <button

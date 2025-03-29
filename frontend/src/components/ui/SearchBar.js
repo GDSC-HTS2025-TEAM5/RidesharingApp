@@ -26,6 +26,7 @@ const SearchBar = ({ placeholder, onPlaceSelected }) => {
           const autocomplete = new Autocomplete(inputRef.current, {
             fields: ["address_components", "geometry", "name"],
             types: ["address"],
+            componentRestrictions: { country: "ca" },
           });
 
           autocomplete.addListener("place_changed", () => {
