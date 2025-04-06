@@ -8,6 +8,7 @@ import PreviewPage from "./pages/auth/PreviewPage";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import TermsConditions from "./pages/auth/TermsConditions";
+import StartupRedirect from "./pages/auth/StartupRedirect";
 
 // Dashboard Pages
 import DriverDashboard from "./pages/dash/DriverDashboard";
@@ -20,7 +21,7 @@ function App() {
     <Router> {/* Router should wrap the entire app */}
       <Routes>
         {/* Default route */}
-        <Route path="/" element={<Login />}/>
+        <Route path="/" element={<StartupRedirect />}/>
 
         {/* Authentication routes */}
         <Route path="/auth/Login" element={<Login />} />
