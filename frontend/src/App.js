@@ -16,6 +16,14 @@ import Home from "./pages/dash/Home";
 import Layout from "./pages/dash/Layout";
 import RiderDashboard from "./pages/dash/RiderDashboard";
 import Activity from "./pages/dash/Activity";
+import Account from "./pages/dash/Account";
+
+// Account subpages
+import AccountInfo from "./pages/dash/AccountInfo";
+import Wallet from "./pages/dash/Wallet";
+import Settings from "./pages/dash/Settings";
+import Support from "./pages/dash/Support";
+import Legal from "./pages/dash/Legal";
 
 function App() {
   return (
@@ -33,11 +41,19 @@ function App() {
         {/* Dashboard routes */}
 
         <Route path="/dash/*" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="RiderDashboard" element={<RiderDashboard />} /> 
-                    <Route path="DriverDashboard" element={<DriverDashboard />} />
-                    <Route path="Activity" element={<Activity />} /> 
-                </Route>
+          <Route path="RiderDashboard" element={<RiderDashboard />} />
+          <Route path="DriverDashboard" element={<DriverDashboard />} />
+          <Route path="Activity" element={<Activity />} />
+          <Route path="Account" element={<Account />} />
+
+          {/* Account subpages */}
+          <Route path="Account/Info" element={<AccountInfo />} />
+          <Route path="Account/Wallet" element={<Wallet />} />
+          <Route path="Account/Settings" element={<Settings />} />
+          <Route path="Account/Support" element={<Support />} />
+          <Route path="Account/Legal" element={<Legal />} />
+        </Route>
+
 
         <Route path = "*" element={<Navigate to="/" />} />
       </Routes>
