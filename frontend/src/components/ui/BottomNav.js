@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 
 function BottomNav({ tabSelection, setTabSelection }) {
     const navigate = useNavigate();
-    const pages = ["RiderDashboard", "Activity", "Chat", "DriverDashboard", "Account"];
-    const bar_name = ["Home", "Activity", "Chat", "Driver", "Account"];
+    const pages = ["RiderDashboard", "Activity", "DriverDashboard", "Account"];
+    const bar_name = ["Home", "Activity", "Driver", "Account"];
 
     const handleNavigation = (index) => {
         setTabSelection(index);

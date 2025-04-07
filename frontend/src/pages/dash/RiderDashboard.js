@@ -54,7 +54,7 @@ const RiderDashboard = () => {
 
   return (
     <div className="bg-gray-100 p-6 min-h-screen">
-      <div className="container mx-auto max-w-xl">
+      <div className="container mx-auto max-w-3xl">
         {/* Search Inputs */}
         <SearchBar placeholder="Where from?" onPlaceSelected={setFrom} />
         <SearchBar placeholder="Where to?" onPlaceSelected={setTo} />

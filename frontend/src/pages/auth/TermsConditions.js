@@ -8,7 +8,7 @@ function TermsAndConditions() {
   function handleAccept() {
     // You can store agreement status in localStorage, context, or backend
     localStorage.setItem('acceptedTerms', 'true');
-    navigate('/dash/Home.js'); // Continue to RiderDashboard
+    navigate('/dash/RiderDashboard'); // Continue to RiderDashboard
   }
 
   return (
@@ -21,7 +21,6 @@ function TermsAndConditions() {
           <li>You agree not to misuse the platform or harm others.</li>
           <li>Your personal information will be handled according to our privacy policy.</li>
           <li>We reserve the right to suspend accounts violating our terms.</li>
-          {/* Add more if needed */}
         </ul>
       </div>
       <button
