@@ -4,7 +4,6 @@ import { FaCar, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 const DriverDashboard = () => {
   const [liveRequests, setLiveRequests] = useState([]);
   const [upcomingRides, setUpcomingRides] = useState([]);
-  const [isAvailable, setIsAvailable] = useState(true);
   const [route, setRoute] = useState("Home to SFU");
   const [selectedRoute, setSelectedRoute] = useState("");
   const [routes, setRoutes] = useState(["Home to SFU", "BF's Home to SFU"]);
@@ -39,7 +38,6 @@ const DriverDashboard = () => {
     alert("Ride request rejected!");
   };
 
-  const toggleAvailability = () => setIsAvailable(!isAvailable);
   const updateRoute = (newRoute) => setRoute(newRoute);
   const handleRouteChange = (e) => setSelectedRoute(e.target.value);
   const handleTimeChange = (e) => setRideTime(e.target.value);
@@ -94,17 +92,6 @@ const DriverDashboard = () => {
               Add Route
             </button>
           </div>
-
-          <div className="flex justify-center">
-            <button
-              className={`p-2 rounded-md flex items-center ${
-                isAvailable ? "bg-green-500" : "bg-red-500"
-              } text-white`}
-              onClick={toggleAvailability}
-            >
-              <FaCar className="mr-2" /> {isAvailable ? "Go Offline" : "Go Online"}
-            </button>
-          </div>
         </div>
 
         {/* Ride Control */}
@@ -136,12 +123,21 @@ const DriverDashboard = () => {
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Live Ride Requests</h2>
           {liveRequests.length > 0 ? (
-            liveRequests.map((request) => (
+            liveRequests
+            .slice()
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .map((request) => (
               <div key={request.id} className="flex justify-between items-center mb-4">
                 <div>
                   <p className="font-semibold">{request.name}</p>
                   <p>{request.pickup} to {request.dropoff}</p>
-                  <p>{request.date}, {request.time}</p>
+                  <p>
+                    {new Date(request.date).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}, {request.time}
+                  </p>
                   {request.selectedRide && (
                     <p className="text-sm text-gray-600">
                       Assigned Driver: <strong>{request.selectedRide.driver}</strong> ({request.selectedRide.car}) - ETA {request.selectedRide.eta}
