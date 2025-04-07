@@ -33,3 +33,5 @@ pnpm-lock.yaml
 # Ignore local Python venv
 venv/
 __pycache__/
+
+rideshare/db.sqlite3
