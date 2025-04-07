@@ -1,11 +1,7 @@
-/* src/index.css */
-
 /* Tailwind Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
 
 /* Body styling */
 body {

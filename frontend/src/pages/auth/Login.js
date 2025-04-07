@@ -31,12 +31,14 @@ function Login() {
       if (response.ok && data.token) {
         localStorage.setItem("authToken", data.token);
         navigate("/dash/RiderDashboard");
+      } else if (data.non_field_errors) {
+        alert(data.non_field_errors[0]); // e.g. "Unable to log in with provided credentials."
       } else {
-        alert(data.detail || "Login failed. Please check your credentials.");
+        alert("Login failed. Please try again.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Something went wrong. Please try again.");
+      alert("An error occurred. Please try again later.");
     }
 
     setLoading(false);
@@ -66,7 +68,9 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full p-2 rounded text-white ${loading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"}`}
+            className={`w-full p-2 rounded text-white font-semibold ${
+              loading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
+            }`}
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -82,4 +86,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login
