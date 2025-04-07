@@ -15,6 +15,7 @@ import DriverDashboard from "./pages/dash/DriverDashboard";
 import Home from "./pages/dash/Home";
 import Layout from "./pages/dash/Layout";
 import RiderDashboard from "./pages/dash/RiderDashboard";
+import Activity from "./pages/dash/Activity";
 
 function App() {
   return (
@@ -34,7 +35,8 @@ function App() {
         <Route path="/dash/*" element={<Layout />}>
                     <Route index element={<Home />} />
                     <Route path="RiderDashboard" element={<RiderDashboard />} /> 
-                    <Route path="DriverDashboard" element={<DriverDashboard />} /> 
+                    <Route path="DriverDashboard" element={<DriverDashboard />} />
+                    <Route path="Activity" element={<Activity />} /> 
                 </Route>
 
         <Route path = "*" element={<Navigate to="/" />} />
