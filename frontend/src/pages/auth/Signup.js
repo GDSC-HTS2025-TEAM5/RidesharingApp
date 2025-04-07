@@ -1,67 +1,86 @@
+// src/pages/auth/Signup.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Signup() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password || !confirmPassword) {
-      alert("Please fill in all fields.");
+
+    if (!email || !password || !confirm) {
+      alert("Please fill out all fields.");
       return;
     }
-    if (password !== confirmPassword) {
+
+    if (password !== confirm) {
       alert("Passwords do not match.");
       return;
     }
 
-    // TODO: Connect to backend authentication
-    if (email === "user@example.com" && password === "password") {
-      // alert("Signup successful!");
-      console.log("Signing up with:", email, password);
-      navigate("/auth/TermsConditions"); // Redirect to RideDashBoard
-    } else {
-      alert("Invalid credentials, please try again.");
+    try {
+      const res = await axios.post("http://localhost:8000/api/accounts/register/", {
+        email,
+        password,
+      });
+
+      alert("Signup successful! Please log in.");
+      navigate("/auth/Login");
+    } catch (err) {
+      console.error("Signup error:", err.response?.data || err.message);
+      alert("Signup failed. That email may already be in use.");
     }
-    
-    // TODO: Connect to backend registration
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="container">
+      <div className="container max-w-md bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-700 mb-6">Sign Up</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 border rounded"
             required
-            className="focus:ring-2 focus:ring-green-500"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border rounded"
             required
-            className="focus:ring-2 focus:ring-green-500"
           />
           <input
             type="password"
             placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            className="w-full p-2 border rounded"
             required
-            className="focus:ring-2 focus:ring-green-500"
           />
-          <button type="submit">Sign Up</button>
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+          >
+            Sign Up
+          </button>
         </form>
-        <p>Already have an account? <button onClick={() => navigate("/auth/login")}>Login here</button></p>
+        <p className="mt-4 text-sm">
+          Already have an account?{" "}
+          <button
+            onClick={() => navigate("/auth/Login")}
+            className="text-green-600 font-semibold hover:underline"
+          >
+            Log in here
+          </button>
+        </p>
       </div>
     </div>
   );

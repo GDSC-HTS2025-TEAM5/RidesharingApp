@@ -1,11 +1,12 @@
+// src/pages/auth/Login.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,38 +16,26 @@ function Login() {
       return;
     }
 
-    setLoading(true);
-
     try {
-      const response = await fetch("http://localhost:8000/api/accounts/login/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
+      const res = await axios.post("http://localhost:8000/api/accounts/login/", {
+        email,
+        password,
       });
 
-      const data = await response.json();
+      const token = res.data.token;
+      localStorage.setItem("authToken", token); // Save token for future use
 
-      if (response.ok && data.token) {
-        localStorage.setItem("authToken", data.token);
-        navigate("/dash/RiderDashboard");
-      } else if (data.non_field_errors) {
-        alert(data.non_field_errors[0]); // e.g. "Unable to log in with provided credentials."
-      } else {
-        alert("Login failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("An error occurred. Please try again later.");
+      alert("Login successful!");
+      navigate("/dash/RiderDashboard");
+    } catch (err) {
+      console.error("Login error:", err.response?.data || err.message);
+      alert("Login failed. Please check your credentials.");
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm">
+      <div className="container max-w-md bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-700 mb-6">Login</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -54,30 +43,30 @@ function Login() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 border rounded"
             required
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border rounded"
             required
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
           />
           <button
             type="submit"
-            disabled={loading}
-            className={`w-full p-2 rounded text-white font-semibold ${
-              loading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
-            }`}
+            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
           >
-            {loading ? "Logging in..." : "Login"}
+            Login
           </button>
         </form>
-        <p className="mt-4 text-sm text-center">
+        <p className="mt-4 text-sm">
           Don't have an account?{" "}
-          <button onClick={() => navigate("/auth/Signup")} className="text-blue-600 underline">
+          <button
+            onClick={() => navigate("/auth/Signup")}
+            className="text-green-600 font-semibold hover:underline"
+          >
             Sign up here
           </button>
         </p>
@@ -86,4 +75,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;
