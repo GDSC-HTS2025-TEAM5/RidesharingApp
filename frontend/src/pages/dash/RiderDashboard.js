@@ -117,21 +117,24 @@ const RiderDashboard = () => {
 
             <h3 className="text-lg font-semibold mb-2">Available Rides</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {rideOptions.map((ride) => (
+              {rideOptions.map((ride) => {
+              const isSelected = selectedRide?.id === ride.id;
+              return (
                 <Card
                   key={ride.id}
-                  className={`cursor-pointer ${
-                    selectedRide?.id === ride.id ? "ring-2 ring-blue-500" : ""
-                  }`}
+                  className={`cursor-pointer transition-all
+                  ${isSelected ? "border-b-4 border-black" : "opacity-50"}
+                  `}
                   onClick={() => setSelectedRide(ride)}
                 >
-                  <CardContent>
-                    <p className="font-medium">{ride.driver}</p>
-                    <p>{ride.car} - ETA: {ride.eta}</p>
-                  </CardContent>
+                <CardContent>
+                <p className="font-medium">{ride.driver}</p>
+                <p>{ride.car} - ETA: {ride.eta}</p>
+                </CardContent>
                 </Card>
-              ))}
-            </div>
+                  );
+                })}
+                </div>
 
             <Button
               className="bg-green-600 text-white mt-4"
