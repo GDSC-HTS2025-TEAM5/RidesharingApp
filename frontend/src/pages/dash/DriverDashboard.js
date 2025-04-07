@@ -52,7 +52,7 @@ const DriverDashboard = () => {
   return (
     <div className="bg-gray-100 p-6 min-h-screen">
       <div className="container mx-auto max-w-3xl">
-        <h1 className="text-3xl font-semibold text-center mb-8">Driver Dashboard</h1>
+        {/* <h1 className="text-3xl font-semibold text-center mb-8">Driver Dashboard</h1> */}
 
         {/* Route and Availability */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
