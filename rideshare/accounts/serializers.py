@@ -1,15 +1,35 @@
-# accounts/serializers.py
-from django.contrib.auth import get_user_model
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
+from .models import CustomUser
+from django.contrib.auth import authenticate
 
-User = get_user_model()
-
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'phone_number', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        model = CustomUser
+        fields = ['id', 'email', 'username', 'phone_number', 'is_driver', 'is_verified']
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'password']
 
     def create(self, validated_data):
-        # Create a new user using Django's create_user helper to handle password hashing.
-        return User.objects.create_user(**validated_data)
+        email = validated_data['email']
+        password = validated_data['password']
+        user = CustomUser.objects.create_user(
+            username=email,           # Auto-fill username using email
+            email=email,
+            password=password
+        )
+        return user
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(email=data['email'], password=data['password'])
+        if not user:
+            raise serializers.ValidationError("Invalid credentials")
+        return user
