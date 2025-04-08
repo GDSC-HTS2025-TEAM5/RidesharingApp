@@ -1,16 +1,28 @@
-import React from "react";
+// src/pages/dash/Account.js
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Account = () => {
   const navigate = useNavigate();
-
-  const user = {
-    firstName: "Daniel",
-    lastName: "Smith",
+  const [user, setUser] = useState({
+    firstName: "User",
+    lastName: "",
     rating: 4.9,
     profileImage: "https://via.placeholder.com/100",
-  };
+  });
+
+  useEffect(() => {
+    const storedProfile = JSON.parse(localStorage.getItem("userProfile"));
+    if (storedProfile) {
+      setUser((prev) => ({
+        ...prev,
+        firstName: storedProfile.firstName || prev.firstName,
+        lastName: storedProfile.lastName || prev.lastName,
+        profileImage: storedProfile.profileImage || prev.profileImage,
+      }));
+    }
+  }, []);
 
   const tiles = [
     { label: "Account Info", path: "/dash/Account/Info" },
@@ -18,6 +30,7 @@ const Account = () => {
     { label: "App Settings", path: "/dash/Account/Settings" },
     { label: "Support", path: "/dash/Account/Support" },
     { label: "Legal", path: "/dash/Account/Legal" },
+    { label: "Logout", path: "/auth/Login" },
   ];
 
   return (

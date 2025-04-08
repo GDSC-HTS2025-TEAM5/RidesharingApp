@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../../components/ui/BackButton";
 
@@ -9,6 +9,17 @@ const AccountInfo = () => {
   const [phone, setPhone] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedProfile = JSON.parse(localStorage.getItem("userProfile"));
+    if (storedProfile) {
+      setFirstName(storedProfile.firstName || "");
+      setLastName(storedProfile.lastName || "");
+      setGender(storedProfile.gender || "");
+      setPhone(storedProfile.phone || "");
+      setProfileImage(storedProfile.profileImage || null);
+    }
+  }, []);  
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
