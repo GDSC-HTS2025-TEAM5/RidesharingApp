@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import BackButton from "../../components/ui/BackButton";
 
 const Wallet = () => {
+  const navigate = useNavigate();
   const balance = 0.0; // Placeholder balance
   const transactions = [
     { id: 1, date: "2025-04-01", description: "Ride to SFU", amount: "-$6.50" },
@@ -9,6 +12,7 @@ const Wallet = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
+      <BackButton />
       <div className="max-w-md mx-auto bg-white rounded-xl shadow p-6 space-y-6">
         <h2 className="text-2xl font-semibold">Wallet</h2>
 

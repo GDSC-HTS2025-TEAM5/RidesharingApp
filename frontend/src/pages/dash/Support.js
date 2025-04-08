@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BackButton from "../../components/ui/BackButton";
 
 const Support = () => {
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
   const faqs = [
@@ -25,6 +28,7 @@ const Support = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
+      <BackButton />
       <div className="max-w-md mx-auto bg-white rounded-xl shadow p-6 space-y-6">
         <h2 className="text-2xl font-semibold">Support</h2>
 

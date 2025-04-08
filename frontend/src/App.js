@@ -12,7 +12,7 @@ import StartupRedirect from "./pages/auth/StartupRedirect";
 
 // Dashboard Pages
 import DriverDashboard from "./pages/dash/DriverDashboard";
-import Home from "./pages/dash/Home";
+import RideDetails from "./pages/dash/RideDetails";
 import Layout from "./pages/dash/Layout";
 import RiderDashboard from "./pages/dash/RiderDashboard";
 import Activity from "./pages/dash/Activity";
@@ -43,6 +43,7 @@ function App() {
         <Route path="/dash/*" element={<Layout />}>
           <Route path="RiderDashboard" element={<RiderDashboard />} />
           <Route path="DriverDashboard" element={<DriverDashboard />} />
+          <Route path="DriverDashboard/RideDetails/:id" element={<RideDetails />} />
           <Route path="Activity" element={<Activity />} />
           <Route path="Account" element={<Account />} />
 

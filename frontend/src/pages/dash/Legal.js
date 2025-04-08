@@ -1,8 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import BackButton from "../../components/ui/BackButton";
 
 const Legal = () => {
+  const navigate = useNavigate();
   return (
     <div className="p-8 max-w-3xl mx-auto">
+      <BackButton onClick={() => navigate(-1)} className="mb-4" />
       <h1 className="text-3xl font-bold mb-6">Legal</h1>
       <div className="space-y-4 text-sm">
         <h2 className="text-xl font-semibold mt-4">Terms and Conditions</h2>

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FaClock } from "react-icons/fa";
-import { Button, Card, CardContent } from "../../components/ui";
+import { Button } from "../../components/ui";
 import SearchBar from "../../components/ui/SearchBar";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const generateTimeOptions = () => {
   const times = [];
@@ -20,6 +18,31 @@ const generateTimeOptions = () => {
   return times;
 };
 
+const parseTimeTo24HourFormat = (input) => {
+  const date = new Date(`1970-01-01T${input}`);
+  if (!isNaN(date)) {
+    return date.toTimeString().slice(0, 5); // returns "HH:mm"
+  }
+
+  // Try manually parsing if native Date parsing fails (e.g. "2pm")
+  const match = input.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
+  if (!match) return "";
+
+  let [_, hour, minute, meridian] = match;
+  hour = parseInt(hour, 10);
+  minute = parseInt(minute || "00", 10);
+
+  if (meridian) {
+    meridian = meridian.toLowerCase();
+    if (meridian === "pm" && hour !== 12) hour += 12;
+    if (meridian === "am" && hour === 12) hour = 0;
+  }
+
+  const hh = String(hour).padStart(2, "0");
+  const mm = String(minute).padStart(2, "0");
+  return `${hh}:${mm}`;
+};
+
 const RiderDashboard = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -27,24 +50,23 @@ const RiderDashboard = () => {
   const [time, setTime] = useState("");
   const [posted, setPosted] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const allDateFieldsFilled = date.day && date.month && date.year;
     setIsFormValid(from && to && allDateFieldsFilled && time);
-  }, [from, to, date, time]);  
+  }, [from, to, date, time]);
 
   const postRideRequest = async () => {
     if (!isFormValid) return;
-  
+
     const token = localStorage.getItem("authToken");
     if (!token) {
       alert("You must be logged in to post a ride.");
       return;
     }
-  
-    const departureTime = `${date.year}-${date.month}-${date.day}T${time}:00`;
-  
+
+    const departureTime = `${date.year}-${date.month}-${date.day}T${parseTimeTo24HourFormat(time)}:00`;
+
     try {
       await axios.post(
         "http://localhost:8000/api/rides/create/",
@@ -65,7 +87,7 @@ const RiderDashboard = () => {
       console.error("Failed to post ride:", error);
       alert("Failed to post ride. Please try again.");
     }
-  };  
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen py-6 px-4">
@@ -77,7 +99,7 @@ const RiderDashboard = () => {
         </div>
 
         {/* Date Selector (Month / Day / Year) */}
-        <div className="mb-4">
+        <div className="mb-4 mt-4">
           <label className="block text-sm font-semibold mb-1">Date</label>
           <div className="grid grid-cols-3 gap-2">
             <select
@@ -90,7 +112,9 @@ const RiderDashboard = () => {
                 "01", "02", "03", "04", "05", "06",
                 "07", "08", "09", "10", "11", "12"
               ].map((m, i) => (
-                <option key={i} value={m}>{new Date(0, i).toLocaleString('default', { month: 'long' })}</option>
+                <option key={i} value={m}>
+                  {new Date(0, i).toLocaleString("default", { month: "long" })}
+                </option>
               ))}
             </select>
 
@@ -101,7 +125,9 @@ const RiderDashboard = () => {
             >
               <option value="">Day</option>
               {Array.from({ length: 31 }, (_, i) => (
-                <option key={i} value={String(i + 1).padStart(2, '0')}>{i + 1}</option>
+                <option key={i} value={String(i + 1).padStart(2, "0")}>
+                  {i + 1}
+                </option>
               ))}
             </select>
 
@@ -112,38 +138,25 @@ const RiderDashboard = () => {
             >
               <option value="">Year</option>
               {[2025, 2026].map((year) => (
-                <option key={year} value={year}>{year}</option>
+                <option key={year} value={year}>
+                  {year}
+                </option>
               ))}
             </select>
           </div>
         </div>
 
-
-        {/* Time Selector */}
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          <Button className="outline">Time</Button>
-          <select
+        {/* Time Input Field */}
+        <div className="mb-4">
+          <label className="block text-sm font-semibold mb-1">Time</label>
+          <input
+            type="text"
+            placeholder="e.g. 1pm or 13:30"
             className="border p-2 w-full rounded"
             value={time}
             onChange={(e) => setTime(e.target.value)}
-          >
-            <option value="">Select</option>
-            {generateTimeOptions().map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          />
         </div>
-
-        {/* Recently Visited */}
-        <h2 className="text-lg font-semibold mb-2">Recently Visited:</h2>
-        <Card className="mb-4">
-          <CardContent className="flex items-center gap-2">
-            <FaClock className="text-blue-500" />
-            <span>Most recent location</span>
-          </CardContent>
-        </Card>
 
         {/* Post Button */}
         <button

@@ -1,6 +1,8 @@
+// src/pages/dash/DriverDashboard.js
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaCar, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const DriverDashboard = () => {
   const [liveRequests, setLiveRequests] = useState([]);
@@ -8,71 +10,67 @@ const DriverDashboard = () => {
   const [route, setRoute] = useState("Home to SFU");
   const [selectedRoute, setSelectedRoute] = useState("");
   const [routes, setRoutes] = useState(["Home to SFU", "BF's Home to SFU"]);
-  const [isRiding, setIsRiding] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchLiveRequests();
-  }, []);
+  const token = localStorage.getItem("authToken");
 
-  const fetchLiveRequests = async () => {
+  const fetchRides = async () => {
     try {
-      const token = localStorage.getItem("authToken");
       const res = await axios.get("http://localhost:8000/api/rides/", {
-        headers: { Authorization: `Token ${token}` },
+        headers: {
+          Authorization: `Token ${token}`,
+        },
       });
-      const unaccepted = res.data.filter((ride) => !ride.accepted_by);
-      setLiveRequests(unaccepted);
+
+      const rides = res.data;
+      const accepted = rides.filter((ride) => ride.accepted_by);
+      const pending = rides.filter((ride) => !ride.accepted_by);
+      setUpcomingRides(accepted);
+      setLiveRequests(pending);
     } catch (err) {
-      console.error("Failed to fetch ride requests:", err);
+      console.error("Failed to load rides:", err);
     }
   };
 
-  const acceptRequest = async (rideId) => {
+  const acceptRide = async (rideId) => {
     try {
-      const token = localStorage.getItem("authToken");
       await axios.post(
         `http://localhost:8000/api/rides/accept/${rideId}/`,
         {},
-        { headers: { Authorization: `Token ${token}` } }
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       );
-
-      const acceptedRide = liveRequests.find((r) => r.id === rideId);
-      if (acceptedRide) {
-        setUpcomingRides((prev) => [...prev, acceptedRide]);
-        setLiveRequests((prev) => prev.filter((r) => r.id !== rideId));
-        alert("Ride request accepted!");
-      }
+      fetchRides();
     } catch (err) {
-      console.error("Error accepting ride:", err);
-      alert("Could not accept ride.");
+      alert("Failed to accept ride");
+      console.error(err);
     }
   };
 
   const rejectRequest = (id) => {
-    setLiveRequests((prev) => prev.filter((r) => r.id !== id));
+    const updated = liveRequests.filter((r) => r.id !== id);
+    setLiveRequests(updated);
   };
 
-  const updateRoute = (newRoute) => setRoute(newRoute);
-  const handleRouteChange = (e) => setSelectedRoute(e.target.value);
-  const startEndRide = () => {
-    setIsRiding(!isRiding);
-    alert(isRiding ? "Ride has ended!" : "Ride has started!");
-  };
+  useEffect(() => {
+    fetchRides();
+  }, []);
 
   return (
-    <div className="bg-gray-100 p-6 min-h-screen">
+    <div className="bg-gray-100 min-h-screen p-6">
       <div className="container mx-auto max-w-3xl">
-        {/* Route Selection */}
+        {/* Routes Section */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-2xl font-semibold mb-4">Route & Availability</h2>
-          <p className="mb-4">
-            Current Route: <span className="font-bold">{route}</span>
-          </p>
+          <h2 className="text-2xl font-semibold mb-4">Route Selection</h2>
+          <p className="mb-4">Current Route: <span className="font-bold">{route}</span></p>
           <div className="overflow-y-auto max-h-48 mb-4">
             {routes.map((r, index) => (
               <div
                 key={index}
-                onClick={() => updateRoute(r)}
+                onClick={() => setRoute(r)}
                 className={`p-2 cursor-pointer mb-2 rounded-md ${
                   route === r ? "bg-blue-500 text-white" : "bg-gray-200"
                 }`}
@@ -81,110 +79,80 @@ const DriverDashboard = () => {
               </div>
             ))}
           </div>
-          <div className="flex flex-col mb-4">
-            <p className="mb-2 font-semibold">Add New Route:</p>
-            <input
-              type="text"
-              placeholder="Enter new start location"
-              className="p-2 border border-gray-300 rounded-md mb-4"
-              onChange={(e) => setSelectedRoute(e.target.value)}
-              value={selectedRoute}
-            />
-            <button
-              className="bg-blue-500 text-white p-2 rounded-md"
-              onClick={() => {
-                if (selectedRoute) {
-                  setRoutes([...routes, selectedRoute]);
-                  updateRoute(selectedRoute);
-                }
-              }}
-            >
-              Add Route
-            </button>
-          </div>
-        </div>
 
-        {/* Ride Control */}
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-2xl font-semibold mb-4">Currently Riding?</h2>
-          <div className="flex justify-center">
-            <button
-              className={`p-4 rounded-full ${
-                isRiding ? "bg-red-500" : "bg-green-500"
-              } text-white font-bold`}
-              onClick={startEndRide}
-            >
-              {isRiding ? "End Ride" : "Start Ride"}
-            </button>
-          </div>
+          {/* Add New Route */}
+          <input
+            type="text"
+            placeholder="Add a new route"
+            value={selectedRoute}
+            onChange={(e) => setSelectedRoute(e.target.value)}
+            className="p-2 border border-gray-300 rounded mb-2 w-full"
+          />
+          <button
+            onClick={() => {
+              if (selectedRoute) {
+                setRoutes([...routes, selectedRoute]);
+                setRoute(selectedRoute);
+                setSelectedRoute("");
+              }
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Add Route
+          </button>
         </div>
 
         {/* Upcoming Rides */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-2xl font-semibold mb-4">Upcoming Rides</h2>
-          {upcomingRides.length === 0 ? (
-            <p>No upcoming rides.</p>
-          ) : (
+          <h2 className="text-xl font-semibold mb-4">Upcoming Rides</h2>
+          {upcomingRides.length > 0 ? (
             upcomingRides.map((ride) => (
-              <div key={ride.id} className="mb-4">
-                <p>
-                  <strong>
-                    {new Date(ride.departure_time).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </strong>{" "}
-                  - {ride.start_location} to {ride.end_location}
-                </p>
+              <div key={ride.id} className="border p-4 mb-3 rounded shadow-sm">
+                <p><strong>{ride.user.first_name} {ride.user.last_name}</strong></p>
+                <p>{ride.start_location} → {ride.end_location}</p>
+                <p>{new Date(ride.departure_time).toLocaleString()}</p>
+                <button
+                  onClick={() => navigate(`/dash/DriverDashboard/RideDetails/${ride.id}`)}
+                  className="mt-2 px-4 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                  View Details
+                </button>
               </div>
             ))
+          ) : (
+            <p>No upcoming rides</p>
           )}
         </div>
 
         {/* Live Requests */}
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Live Ride Requests</h2>
-          {liveRequests.length === 0 ? (
-            <p>No live requests at the moment.</p>
-          ) : (
-            liveRequests.map((ride) => (
-              <div
-                key={ride.id}
-                className="flex justify-between items-center mb-4"
-              >
+          <h2 className="text-xl font-semibold mb-4">Live Ride Requests</h2>
+          {liveRequests.length > 0 ? (
+            liveRequests.map((request) => (
+              <div key={request.id} className="flex justify-between items-center mb-4">
                 <div>
-                  <p className="font-semibold">
-                    {ride.user_first_name} {ride.user_last_name}
-                  </p>
-                  <p>
-                    {ride.start_location} to {ride.end_location}
-                  </p>
-                  <p>
-                    {new Date(ride.departure_time).toLocaleString(undefined, {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
+                  <p className="font-semibold">{request.user.first_name} {request.user.last_name}</p>
+                  <p>{request.start_location} → {request.end_location}</p>
+                  <p>{new Date(request.departure_time).toLocaleString()}</p>
                 </div>
                 <div className="flex items-center">
                   <button
-                    className="bg-green-500 text-white p-2 rounded-md flex items-center mr-2"
-                    onClick={() => acceptRequest(ride.id)}
+                    className="bg-green-500 text-white px-3 py-1 rounded mr-2"
+                    onClick={() => acceptRide(request.id)}
                   >
-                    <FaCheckCircle className="mr-2" /> Accept
+                    <FaCheckCircle className="inline mr-1" /> Accept
                   </button>
                   <button
-                    className="bg-red-500 text-white p-2 rounded-md flex items-center"
-                    onClick={() => rejectRequest(ride.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                    onClick={() => rejectRequest(request.id)}
                   >
-                    <FaTimesCircle className="mr-2" /> Reject
+                    <FaTimesCircle className="inline mr-1" /> Reject
                   </button>
                 </div>
               </div>
             ))
+          ) : (
+            <p>No new ride requests</p>
           )}
         </div>
       </div>

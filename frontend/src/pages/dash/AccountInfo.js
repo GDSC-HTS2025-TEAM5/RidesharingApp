@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BackButton from "../../components/ui/BackButton";
 
 const AccountInfo = () => {
   const [firstName, setFirstName] = useState("");
@@ -6,6 +8,7 @@ const AccountInfo = () => {
   const [gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
   const [profileImage, setProfileImage] = useState(null);
+  const navigate = useNavigate();
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -26,6 +29,7 @@ const AccountInfo = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
+      <BackButton />
       <div className="max-w-md mx-auto bg-white rounded-xl shadow p-6 space-y-4">
         <h2 className="text-2xl font-semibold mb-4">Account Info</h2>
 
