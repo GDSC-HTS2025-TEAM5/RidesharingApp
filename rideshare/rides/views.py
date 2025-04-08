@@ -9,7 +9,6 @@ from .serializers import RideSerializer
 
 # Create a new ride (trip)
 class CreateRideView(generics.CreateAPIView):
-    queryset = Ride.objects.all()
     serializer_class = RideSerializer
     permission_classes = [permissions.IsAuthenticated]
 

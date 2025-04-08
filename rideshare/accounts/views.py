@@ -29,4 +29,5 @@ class LoginAPI(APIView):
                 "user": UserSerializer(user).data,
                 "token": token.key
             })
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

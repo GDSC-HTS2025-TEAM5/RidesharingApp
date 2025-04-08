@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaClock } from "react-icons/fa";
 import { Button, Card, CardContent } from "../../components/ui";
 import SearchBar from "../../components/ui/SearchBar";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const generateTimeOptions = () => {
   const times = [];
@@ -25,33 +27,45 @@ const RiderDashboard = () => {
   const [time, setTime] = useState("");
   const [posted, setPosted] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const allDateFieldsFilled = date.day && date.month && date.year;
     setIsFormValid(from && to && allDateFieldsFilled && time);
   }, [from, to, date, time]);  
 
-  const postRideRequest = () => {
+  const postRideRequest = async () => {
     if (!isFormValid) return;
-
-    const fullDate = `${date.year}-${date.month}-${date.day}`;
-
-    const newRequest = {
-      id: Date.now(),
-      pickup: from,
-      dropoff: to,
-      date: fullDate,
-      time,
-      status: "pending",
-    };
-
-    const existingRequests = JSON.parse(localStorage.getItem("rideRequests")) || [];
-    existingRequests.push(newRequest);
-    localStorage.setItem("rideRequests", JSON.stringify(existingRequests));
-
-    setPosted(true);
-    setTimeout(() => setPosted(false), 3000);
-  };
+  
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to post a ride.");
+      return;
+    }
+  
+    const departureTime = `${date.year}-${date.month}-${date.day}T${time}:00`;
+  
+    try {
+      await axios.post(
+        "http://localhost:8000/api/rides/create/",
+        {
+          start_location: from,
+          end_location: to,
+          departure_time: departureTime,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      setPosted(true);
+      setTimeout(() => setPosted(false), 3000);
+    } catch (error) {
+      console.error("Failed to post ride:", error);
+      alert("Failed to post ride. Please try again.");
+    }
+  };  
 
   return (
     <div className="bg-gray-100 min-h-screen py-6 px-4">
