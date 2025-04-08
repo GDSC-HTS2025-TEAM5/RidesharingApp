@@ -1,28 +1,42 @@
-// src/pages/dash/Account.js
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Account = () => {
   const navigate = useNavigate();
+
   const [user, setUser] = useState({
-    firstName: "User",
+    firstName: "",
     lastName: "",
     rating: 4.9,
     profileImage: "https://via.placeholder.com/100",
   });
 
   useEffect(() => {
-    const storedProfile = JSON.parse(localStorage.getItem("userProfile"));
-    if (storedProfile) {
-      setUser((prev) => ({
-        ...prev,
-        firstName: storedProfile.firstName || prev.firstName,
-        lastName: storedProfile.lastName || prev.lastName,
-        profileImage: storedProfile.profileImage || prev.profileImage,
-      }));
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      navigate("/auth/Login");
+      return;
     }
-  }, []);
+
+    fetch("http://localhost:8000/api/accounts/profile/", {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUser((prev) => ({
+          ...prev,
+          firstName: data.first_name || "",
+          lastName: data.last_name || "",
+        }));
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user:", err);
+      });
+  }, [navigate]);
 
   const tiles = [
     { label: "Account Info", path: "/dash/Account/Info" },
@@ -39,25 +53,26 @@ const Account = () => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-semibold">
-              {user.firstName} {user.lastName}
+              Hello, {user.firstName} {user.lastName}
             </h2>
-            <p className="flex items-center text-yellow-600">
-              <FaStar className="mr-1" /> {user.rating} rating
+            <p className="text-gray-700 flex items-center mt-1">
+              <FaStar className="text-yellow-500 mr-1" />
+              {user.rating} User Rating
             </p>
           </div>
           <img
             src={user.profileImage}
             alt="Profile"
-            className="w-20 h-20 rounded-lg object-cover"
+            className="w-16 h-16 rounded-full border-2 border-white shadow-sm"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {tiles.map((tile) => (
+          {tiles.map((tile, idx) => (
             <button
-              key={tile.label}
+              key={idx}
               onClick={() => navigate(tile.path)}
-              className="bg-white hover:bg-gray-100 text-black p-4 rounded-xl shadow-md transition-all text-center font-medium"
+              className="bg-blue-200 text-blue-800 py-3 px-4 rounded-lg shadow hover:bg-blue-300 transition-all"
             >
               {tile.label}
             </button>

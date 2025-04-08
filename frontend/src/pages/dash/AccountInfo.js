@@ -1,100 +1,98 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import BackButton from "../../components/ui/BackButton";
+import { useNavigate } from "react-router-dom";
 
 const AccountInfo = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [gender, setGender] = useState("");
-  const [phone, setPhone] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+  });
 
   useEffect(() => {
-    const storedProfile = JSON.parse(localStorage.getItem("userProfile"));
-    if (storedProfile) {
-      setFirstName(storedProfile.firstName || "");
-      setLastName(storedProfile.lastName || "");
-      setGender(storedProfile.gender || "");
-      setPhone(storedProfile.phone || "");
-      setProfileImage(storedProfile.profileImage || null);
-    }
-  }, []);  
+    const fetchUser = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) return;
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+      try {
+        const response = await axios.get("http://localhost:8000/api/accounts/profile/", {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
+        setFormData(response.data);
+      } catch (err) {
+        console.error("Failed to fetch user profile", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    const profile = { firstName, lastName, gender, phone, profileImage };
-    localStorage.setItem("userProfile", JSON.stringify(profile));
-    alert("Profile saved!");
+  const handleSave = async () => {
+    const token = localStorage.getItem("authToken");
+    try {
+      await axios.put("http://localhost:8000/api/accounts/profile/", formData, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Update error", err);
+    }
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
+    <div className="p-6 max-w-xl mx-auto bg-white rounded shadow">
       <BackButton />
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow p-6 space-y-4">
-        <h2 className="text-2xl font-semibold mb-4">Account Info</h2>
+      <h2 className="text-2xl font-semibold mb-4">Edit Account Info</h2>
 
-        <input
-          type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <select
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          className="w-full p-2 border rounded"
-        >
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
+      <label className="block mb-2">First Name</label>
+      <input
+        name="first_name"
+        value={formData.first_name}
+        onChange={handleChange}
+        className="w-full p-2 border rounded mb-4"
+      />
 
-        <div>
-          <label className="block mb-1 font-medium">Profile Picture</label>
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-          {profileImage && (
-            <img
-              src={profileImage}
-              alt="Preview"
-              className="w-24 h-24 rounded mt-2 object-cover"
-            />
-          )}
-        </div>
+      <label className="block mb-2">Last Name</label>
+      <input
+        name="last_name"
+        value={formData.last_name}
+        onChange={handleChange}
+        className="w-full p-2 border rounded mb-4"
+      />
 
-        <button
-          onClick={handleSave}
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-        >
-          Save Changes
-        </button>
-      </div>
+      <label className="block mb-2">Phone Number</label>
+      <input
+        name="phone_number"
+        value={formData.phone_number}
+        onChange={handleChange}
+        className="w-full p-2 border rounded mb-4"
+      />
+
+      <label className="block mb-2">Email (read-only)</label>
+      <input
+        name="email"
+        value={formData.email}
+        readOnly
+        className="w-full p-2 border rounded bg-gray-100 text-gray-600"
+      />
+
+      <button
+        onClick={handleSave}
+        className="mt-4 bg-green-600 text-white w-full py-2 rounded hover:bg-green-700"
+      >
+        Save Changes
+      </button>
     </div>
   );
 };
