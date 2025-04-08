@@ -37,7 +37,7 @@ const RiderDashboard = () => {
   const postRideRequest = async () => {
     if (!isFormValid) return;
   
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
     if (!token) {
       alert("You must be logged in to post a ride.");
       return;

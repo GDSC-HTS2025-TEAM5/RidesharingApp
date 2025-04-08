@@ -8,11 +8,13 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password || !confirm) {
+    if (!email || !password || !confirm || !firstName || !lastName) {
       alert("Please fill out all fields.");
       return;
     }
@@ -26,6 +28,8 @@ function Signup() {
       const res = await axios.post("http://localhost:8000/api/accounts/register/", {
         email,
         password,
+        first_name: firstName,
+        last_name: lastName,
       });
 
       alert("Signup successful! Please log in.");
@@ -40,13 +44,31 @@ function Signup() {
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="container max-w-md bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-700 mb-6">Sign Up</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-1">
+          <input
+            type="text"
+            name="first_name"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+            required
+          />
+          <input
+            type="text"
+            name="last_name"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+            required
+          />
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="p-2 border border-gray-300 rounded"
             required
           />
           <input
@@ -54,7 +76,7 @@ function Signup() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="p-2 border border-gray-300 rounded"
             required
           />
           <input
@@ -62,12 +84,12 @@ function Signup() {
             placeholder="Confirm Password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="p-2 border border-gray-300 rounded"
             required
           />
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            className="bg-green-600 text-white py-2 rounded hover:bg-green-700"
           >
             Sign Up
           </button>

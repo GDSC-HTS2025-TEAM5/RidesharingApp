@@ -7,20 +7,29 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id', 'email', 'username', 'phone_number', 'is_driver', 'is_verified']
 
+# accounts/serializers.py
+from rest_framework import serializers
+from .models import CustomUser
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'password']
+        fields = ['email', 'password', 'first_name', 'last_name']
 
     def create(self, validated_data):
         email = validated_data['email']
         password = validated_data['password']
+        first_name = validated_data.get('first_name', '')
+        last_name = validated_data.get('last_name', '')
+
         user = CustomUser.objects.create_user(
-            username=email,           # Auto-fill username using email
+            username=email,
             email=email,
-            password=password
+            password=password,
+            first_name=first_name,
+            last_name=last_name
         )
         return user
 
