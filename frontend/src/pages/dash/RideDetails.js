@@ -36,7 +36,7 @@ const RideDetails = () => {
     <BackButton onClick={() => navigate(-1)} className="mb-4" />
       <h1 className="text-2xl font-bold mb-4">Ride Details</h1>
       <div className="space-y-2">
-        <p><strong>Rider:</strong> {ride.user.first_name} {ride.user.last_name}</p>
+        <p><strong>Rider:</strong> John Doe </p> {/* Placeholder for rider name */}
         <p><strong>From:</strong> {ride.start_location}</p>
         <p><strong>To:</strong> {ride.end_location}</p>
         <p><strong>Departure:</strong> {new Date(ride.departure_time).toLocaleString()}</p>

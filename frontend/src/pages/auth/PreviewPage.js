@@ -14,6 +14,11 @@ const PreviewPage = () => {
 
   const slides = [
     {
+      title: "Welcome to BuddyRide",
+      image: buddyImg,
+      blurb: "Your dependable rideshare solution for environment-friendly travel."
+    },
+    {
       title: "Plan Your Route",
       image: routingImg,
       blurb: "Smart navigation helps optimize your ride every time."
@@ -31,11 +36,6 @@ const PreviewPage = () => {
     {
       title: "Get to SFU",
       image: sfuImg,
-      blurb: "Your dependable rideshare solution for campus travel."
-    },
-    {
-      title: "Welcome to BuddyRide",
-      image: buddyImg,
       blurb: "Find your buddy. Ride better, together."
     }
   ];

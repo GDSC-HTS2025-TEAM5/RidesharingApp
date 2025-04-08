@@ -54,7 +54,7 @@ const Account = () => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-semibold">
-              John Doe
+              Alice Kim
             </h2>
             <p className="text-gray-700 flex items-center mt-1">
               <FaStar className="text-yellow-500 mr-1" />

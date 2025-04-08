@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Activity = () => {
   const [rides, setRides] = useState([]);
@@ -33,11 +34,11 @@ const Activity = () => {
           Authorization: `Token ${token}`,
         },
       });
-      alert("Ride cancelled successfully.");
+      toast.success("Ride cancelled successfully.");
       fetchRides(); // Refresh after deletion
     } catch (err) {
       console.error("Cancel ride error:", err);
-      alert("Failed to cancel ride.");
+      toast.alert("Failed to cancel ride.");
     }
   };
 
@@ -83,9 +84,10 @@ const Activity = () => {
         <h1 className="text-2xl font-bold mb-6">Your Ride Activity</h1>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-2">Upcoming Rides</h2>
+          <h2 className="text-xl font-semibold mb-2">Outgoing Requests</h2>
           {upcomingRides.length > 0 ? (
             upcomingRides.map((ride) => <RideCard key={ride.id} ride={ride} />)
+            //<p className="text-gray-500">No upcoming rides.</p>
           ) : (
             <p className="text-gray-500">No upcoming rides.</p>
           )}
