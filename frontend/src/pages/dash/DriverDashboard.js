@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const DriverDashboard = () => {
   const [liveRequests, setLiveRequests] = useState([]);
@@ -43,14 +44,16 @@ const DriverDashboard = () => {
           },
         }
       );
+      toast.success("Ride accepted successfully!");
       fetchRides();
     } catch (err) {
-      alert("Failed to accept ride");
+      toast.error("Failed to accept ride");
       console.error(err);
     }
   };
 
   const rejectRequest = (id) => {
+    toast.info("Ride request rejected");
     const updated = liveRequests.filter((r) => r.id !== id);
     setLiveRequests(updated);
   };

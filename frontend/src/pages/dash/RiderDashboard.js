@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "../../components/ui";
 import SearchBar from "../../components/ui/SearchBar";
 import axios from "axios";
-
-const generateTimeOptions = () => {
-  const times = [];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minutes = 0; minutes < 60; minutes += 15) {
-      const formattedHour = hour.toString().padStart(2, "0");
-      const formattedMinutes = minutes.toString().padStart(2, "0");
-      times.push({
-        value: `${formattedHour}:${formattedMinutes}`,
-        label: `${formattedHour}:${formattedMinutes}`,
-      });
-    }
-  }
-  return times;
-};
+import { toast } from "react-toastify";
 
 const parseTimeTo24HourFormat = (input) => {
   const date = new Date(`1970-01-01T${input}`);
@@ -24,7 +9,6 @@ const parseTimeTo24HourFormat = (input) => {
     return date.toTimeString().slice(0, 5); // returns "HH:mm"
   }
 
-  // Try manually parsing if native Date parsing fails (e.g. "2pm")
   const match = input.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
   if (!match) return "";
 
@@ -85,13 +69,13 @@ const RiderDashboard = () => {
       setTimeout(() => setPosted(false), 3000);
     } catch (error) {
       console.error("Failed to post ride:", error);
-      alert("Failed to post ride. Please try again.");
+      toast.error("Failed to post ride. Please try again.");
     }
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-6 px-4">
-      <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center pt-8 pb-28 px-4">
+      <div className="w-full max-w-md">
         {/* Search Inputs */}
         <div className="space-y-4">
           <SearchBar placeholder="Where from?" onPlaceSelected={setFrom} />

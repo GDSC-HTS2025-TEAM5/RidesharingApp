@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Preview Pages
 import PreviewPage from "./pages/auth/PreviewPage";
@@ -27,10 +29,12 @@ import Legal from "./pages/dash/Legal";
 
 function App() {
   return (
-    <Router> {/* Router should wrap the entire app */}
+    <Router>
+      {/* Toast container added globally */}
+      <ToastContainer position="top-center" autoClose={3000} />
+
       <Routes>
-        {/* Default route */}
-        <Route path="/" element={<StartupRedirect />}/>
+        <Route path="/" element={<StartupRedirect />} />
 
         {/* Authentication routes */}
         <Route path="/auth/Login" element={<Login />} />
@@ -39,15 +43,12 @@ function App() {
         <Route path="/auth/PreviewPage" element={<PreviewPage />} />
 
         {/* Dashboard routes */}
-
         <Route path="/dash/*" element={<Layout />}>
           <Route path="RiderDashboard" element={<RiderDashboard />} />
           <Route path="DriverDashboard" element={<DriverDashboard />} />
           <Route path="DriverDashboard/RideDetails/:id" element={<RideDetails />} />
           <Route path="Activity" element={<Activity />} />
           <Route path="Account" element={<Account />} />
-
-          {/* Account subpages */}
           <Route path="Account/Info" element={<AccountInfo />} />
           <Route path="Account/Wallet" element={<Wallet />} />
           <Route path="Account/Settings" element={<Settings />} />
@@ -55,8 +56,8 @@ function App() {
           <Route path="Account/Legal" element={<Legal />} />
         </Route>
 
-
-        <Route path = "*" element={<Navigate to="/" />} />
+        {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

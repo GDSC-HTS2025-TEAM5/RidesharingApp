@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import default_pfp from "../../images/default_pfp.png";
 
 const Account = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const Account = () => {
     firstName: "",
     lastName: "",
     rating: 4.9,
-    profileImage: "https://via.placeholder.com/100",
+    profileImage: default_pfp,
   });
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Account = () => {
       return;
     }
 
-    fetch("http://localhost:8000/api/accounts/profile/", {
+    fetch("http://localhost:8000/api/accounts/u/", {
       headers: {
         Authorization: `Token ${token}`,
       },
@@ -34,7 +35,7 @@ const Account = () => {
         }));
       })
       .catch((err) => {
-        console.error("Failed to fetch user:", err);
+        console.error("Failed to fetch user data:", err);
       });
   }, [navigate]);
 
@@ -53,7 +54,7 @@ const Account = () => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-semibold">
-              Hello, {user.firstName} {user.lastName}
+              John Doe
             </h2>
             <p className="text-gray-700 flex items-center mt-1">
               <FaStar className="text-yellow-500 mr-1" />

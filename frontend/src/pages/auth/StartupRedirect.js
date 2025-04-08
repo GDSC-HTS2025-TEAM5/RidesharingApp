@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // 🔧 Developer override
-const DEV_FORCE_FIRST_VISIT = false; // Set to false for normal behavior
+const DEV_FORCE_FIRST_VISIT = true; // Set to false for normal behavior
 
 const StartupRedirect = () => {
   const navigate = useNavigate();

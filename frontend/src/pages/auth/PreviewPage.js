@@ -6,6 +6,7 @@ import routingImg from "../../images/rideshare_routing.png";
 import pickupImg from "../../images/rideshare_pickup.png";
 import drivingImg from "../../images/rideshare_driving.png";
 import sfuImg from "../../images/rideshare_sfu.png";
+import buddyImg from "../../images/buddyridelogo.png";
 
 const PreviewPage = () => {
   const navigate = useNavigate();
@@ -31,6 +32,11 @@ const PreviewPage = () => {
       title: "Get to SFU",
       image: sfuImg,
       blurb: "Your dependable rideshare solution for campus travel."
+    },
+    {
+      title: "Welcome to BuddyRide",
+      image: buddyImg,
+      blurb: "Find your buddy. Ride better, together."
     }
   ];
 

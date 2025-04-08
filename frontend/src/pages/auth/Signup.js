@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Signup() {
   const navigate = useNavigate();
@@ -32,17 +33,20 @@ function Signup() {
         last_name: lastName,
       });
 
-      alert("Signup successful! Please log in.");
-      navigate("/auth/Login");
+      // Save token and redirect
+      const token = res.data.token;
+      localStorage.setItem("authToken", token);
+      toast.success("Signup successful!");
+      navigate("/dash/RiderDashboard"); // skip login screen
     } catch (err) {
       console.error("Signup error:", err.response?.data || err.message);
-      alert("Signup failed. That email may already be in use.");
+      toast.error("Signup failed. That email may already be in use.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="container max-w-md bg-white p-6 rounded-lg shadow-md">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-700 mb-6">Sign Up</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-1">
           <input
